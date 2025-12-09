@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div>
+    {% if title == "Активные заявки" %}
+    <form action="{{ url_for('archive_all') }}" method="post" onsubmit="return confirm('Вы уверены?');">
+        <button type="submit" class="btn btn-archive-all">Перенести все в архив</button>
+    </form>
+    {% endif %}
+    <h2>{{ title }}</h2>
+</div>
+<div class="nav">
+    <a href="{{ url_for('index') }}">Активные</a> | <a href="{{ url_for('archive_page') }}">Архив</a>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th><th>Время</th><th>Корпус</th><th>Помещение</th><th>Проблема</th><th>Детали</th><th>ФИО</th><th>Должность</th>
+            {% if title == "Активные заявки" %}<th>Действия</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req.id }}</td><td>{{ req.timestamp }}</td><td>{{ req.building_name }}</td><td>{{ req.room_name }}</td>
+            <td>{{ req.problem_type_name }}</td><td>{{ req.problem_details }}</td><td>{{ req.name }}</td><td>{{ req.position }}</td>
+            {% if title == "Активные заявки" %}
+            <td>
+                <form action="{{ url_for('archive_one', request_id=req.id) }}" method="post">
+                    <button type="submit" class="btn btn-archive">В архив</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% else %}
+        <tr><td colspan="9" style="text-align: center;">Здесь пока пусто.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

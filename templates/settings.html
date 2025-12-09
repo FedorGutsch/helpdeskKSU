@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block title %}Настройки - Корпуса{% endblock %}
+
+{% block content %}
+<h1>Настройки: Корпуса</h1>
+<form action="{{ url_for('add_item', table_name='buildings') }}" method="post">
+    <input type="text" name="name" placeholder="Название нового корпуса" required>
+    <button type="submit">Добавить</button>
+</form>
+<table>
+    <thead><tr><th>Название</th><th width="10%">Действия</th></tr></thead>
+    <tbody>
+        {% for b in buildings %}
+        <tr>
+            <td><a href="{{ url_for('building_details', building_id=b.id) }}">{{ b.name }}</a></td>
+            <td>
+                <form action="{{ url_for('delete_item', table_name='buildings', item_id=b.id) }}" method="post" onsubmit="return confirm('Удалить корпус и ВСЕ связанные с ним данные?');">
+                    <button type="submit" class="btn btn-delete">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="2" style="text-align: center;">Корпуса еще не добавлены.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

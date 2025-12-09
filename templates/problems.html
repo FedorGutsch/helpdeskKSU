@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block title %}Проблемы в {{ room.name }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs">
+    <a href="{{ url_for('settings') }}">Настройки</a> &raquo; 
+    <a href="{{ url_for('building_details', building_id=building.id) }}">{{ building.name }}</a> &raquo; 
+    {{ room.name }}
+</div>
+<h1>Типы проблем в "{{ room.name }}"</h1>
+<form action="{{ url_for('add_item', table_name='problem_types') }}" method="post">
+    <input type="hidden" name="room_id" value="{{ room.id }}">
+    <input type="text" name="name" placeholder="Новый тип проблемы" required>
+    <button type="submit">Добавить</button>
+</form>
+<table>
+    <thead><tr><th>Название</th><th width="10%">Действия</th></tr></thead>
+    <tbody>
+        {% for p in problems %}
+        <tr>
+            <td>{{ p.name }}</td>
+            <td>
+                <form action="{{ url_for('delete_item', table_name='problem_types', item_id=p.id) }}" method="post" onsubmit="return confirm('Удалить этот тип проблемы?');">
+                    <button type="submit" class="btn btn-delete">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="2" style="text-align: center;">Типы проблем еще не добавлены.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
